@@ -256,6 +256,19 @@ impl ServerState {
     ) -> Vec<UserTokenPolicy> {
         let mut user_identity_tokens = Vec::with_capacity(3);
 
+        info!("Endpoint {:?} requested UIT check", endpoint);
+        debug!("Supports anonymous: {}", endpoint.supports_anonymous());
+        debug!(
+            "Supports user/pass: {}",
+            endpoint.supports_user_pass(&config.user_tokens)
+        );
+        debug!(
+            "Supports x509: {}",
+            endpoint.supports_x509(&config.user_tokens)
+        );
+
+        debug!("User tokens: {:?}", config.user_tokens);
+
         // Anonymous policy
         if endpoint.supports_anonymous() {
             user_identity_tokens.push(UserTokenPolicy {
