@@ -301,6 +301,8 @@ impl ServerState {
             });
         }
 
+        info!("Endpoint has {} UITs", user_identity_tokens.len());
+
         if user_identity_tokens.is_empty() {
             debug!(
                 "user_identity_tokens() returned zero endpoints for endpoint {} / {} {}",
