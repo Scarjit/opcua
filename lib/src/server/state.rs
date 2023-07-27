@@ -54,7 +54,7 @@ impl Default for OperationalLimits {
     fn default() -> Self {
         Self {
             max_nodes_per_translate_browse_paths_to_node_ids:
-                constants::MAX_NODES_PER_TRANSLATE_BROWSE_PATHS_TO_NODE_IDS,
+            constants::MAX_NODES_PER_TRANSLATE_BROWSE_PATHS_TO_NODE_IDS,
             max_nodes_per_read: constants::MAX_NODES_PER_READ,
             max_nodes_per_write: constants::MAX_NODES_PER_WRITE,
             max_nodes_per_method_call: constants::MAX_NODES_PER_METHOD_CALL,
@@ -240,7 +240,7 @@ impl ServerState {
                 panic!()
             }
         }
-        .into()
+            .into()
     }
 
     fn user_pass_security_policy_uri(_endpoint: &ServerEndpoint) -> UAString {
@@ -255,19 +255,6 @@ impl ServerState {
         endpoint: &ServerEndpoint,
     ) -> Vec<UserTokenPolicy> {
         let mut user_identity_tokens = Vec::with_capacity(3);
-
-        info!("Endpoint {:?} requested UIT check", endpoint);
-        debug!("Supports anonymous: {}", endpoint.supports_anonymous());
-        debug!(
-            "Supports user/pass: {}",
-            endpoint.supports_user_pass(&config.user_tokens)
-        );
-        debug!(
-            "Supports x509: {}",
-            endpoint.supports_x509(&config.user_tokens)
-        );
-
-        debug!("User tokens: {:?}", config.user_tokens);
 
         // Anonymous policy
         if endpoint.supports_anonymous() {
@@ -301,9 +288,23 @@ impl ServerState {
             });
         }
 
-        info!("Endpoint has {} UITs", user_identity_tokens.len());
 
         if user_identity_tokens.is_empty() {
+            info!("Endpoint {:?} requested UIT check", endpoint);
+            debug!("Supports anonymous: {}", endpoint.supports_anonymous());
+            debug!(
+                "Supports user/pass: {}",
+                endpoint.supports_user_pass(&config.user_tokens)
+            );
+            debug!(
+                "Supports x509: {}",
+                endpoint.supports_x509(&config.user_tokens)
+            );
+
+            debug!("User tokens: {:?}", config.user_tokens);
+
+            info!("Endpoint has {} UITs", user_identity_tokens.len());
+
             debug!(
                 "user_identity_tokens() returned zero endpoints for endpoint {} / {} {}",
                 endpoint.path, endpoint.security_policy, endpoint.security_mode
@@ -687,8 +688,8 @@ impl ServerState {
     }
 
     pub(crate) fn raise_and_log<T>(&self, event: T) -> Result<NodeId, ()>
-    where
-        T: AuditEvent + Event,
+        where
+            T: AuditEvent + Event,
     {
         let audit_log = trace_write_lock!(self.audit_log);
         audit_log.raise_and_log(event)
